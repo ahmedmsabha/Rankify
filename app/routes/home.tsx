@@ -18,7 +18,7 @@ export function meta({}) {
 
 export default function Home() {
   const [loadingResumes, setLoadingResumes] = useState(false);
-    const { isLoading, auth } = usePuterStore();
+  const { isLoading, auth } = usePuterStore();
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -30,7 +30,11 @@ export default function Auth() {
         <section className="flex flex-col gap-8 bg-white rounded-2xl p-10">
           <div className="flex flex-col gap-2 items-center text-center">
             <h1>Welcome</h1>
-            <h2>Log In To Continue Your Job Journey</h2>
+            {auth.isAuthenticated ? (
+              <h2>Log Out To Continue</h2>
+            ) : (
+              <h2>Log In To Continue Your Job Journey</h2>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
