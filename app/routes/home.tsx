@@ -1,9 +1,8 @@
 import { NavBar } from "~/components/nav-bar";
 import { ResumeCard } from "~/components/resume-card";
-import { resumes } from "../../constants";
 
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { usePuterStore } from "~/lib/puter";
 
 export function meta({}) {
@@ -17,8 +16,9 @@ export function meta({}) {
 }
 
 export default function Home() {
+  const {auth , kv} = usePuterStore();
+  const [resumes, setResumes] = useState<Resume[]>([]);
   const [loadingResumes, setLoadingResumes] = useState(false);
-  const { isLoading, auth } = usePuterStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +26,20 @@ export default function Home() {
       navigate("/auth?next=/");
     }
   }, [auth.isAuthenticated]);
+
+  useEffect(() => {
+    const loadResumes = async () => {
+        setLoadingResumes(true);
+      const resumes = (await kv.list("resume:*",true)) as KVItem[];
+
+      const parsedResumes = resumes.map((resume) => {
+        return JSON.parse(resume.value) as Resume;
+      });
+      setResumes(parsedResumes || []);
+      setLoadingResumes(false);
+    }
+    loadResumes();
+  }, [kv]);
 
   return (
     <main className="bg-[url('/images/bg-main.svg')] bg-cover">

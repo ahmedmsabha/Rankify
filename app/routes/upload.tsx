@@ -51,6 +51,8 @@ export default function Upload() {
 
     await kv.set(`resume:${uuid}`, JSON.stringify(data));
 
+    setStatusText('Analyzing...');
+
     const feedback = await ai.feedback(
       uploadedFile.path,
       prepareInstructions({jobTitle, jobDescription})
