@@ -16,30 +16,31 @@ export function meta({}) {
 }
 
 export default function Home() {
-  const {auth , kv} = usePuterStore();
+  const { auth, kv } = usePuterStore();
+  const navigate = useNavigate();
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [loadingResumes, setLoadingResumes] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!auth.isAuthenticated) {
-      navigate("/auth?next=/");
-    }
-  }, [auth.isAuthenticated]);
+    if(!auth.isAuthenticated) navigate('/auth?next=/');
+  }, [auth.isAuthenticated])
 
   useEffect(() => {
     const loadResumes = async () => {
-        setLoadingResumes(true);
-      const resumes = (await kv.list("resume:*",true)) as KVItem[];
+      setLoadingResumes(true);
 
-      const parsedResumes = resumes.map((resume) => {
-        return JSON.parse(resume.value) as Resume;
-      });
+      const resumes = (await kv.list('resume:*', true)) as KVItem[];
+
+      const parsedResumes = resumes?.map((resume) => (
+          JSON.parse(resume.value) as Resume
+      ))
+
       setResumes(parsedResumes || []);
       setLoadingResumes(false);
     }
-    loadResumes();
-  }, [kv]);
+
+    loadResumes()
+  }, []);
 
   return (
     <main className="bg-[url('/images/bg-main.svg')] bg-cover">
